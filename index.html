@@ -1,420 +1,262 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Plan de financement</title>
+<meta name="theme-color" content="#1d5b78">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Mon élément">
-<meta name="theme-color" content="#0d1526">
-<meta name="description" content="Test des 5 éléments de la médecine chinoise et conseils anti-fatigue selon votre profil.">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" href="icon-192.png">
-<title>Mon élément – Médecine chinoise</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Plan financement">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
 <style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+[hidden]{display:none!important}
+/* Layout : en-tête, bloc « Hypothèses » en grille, puis le plan en tableau large défilant (style registre comptable) */
 :root{
-  --bg:#0d1526;--panel:#15203a;--panel2:#1c2a4a;--line:#2a3a60;
-  --amber:#f2b33d;--txt:#e8edf7;--mut:#8a97b3;--ok:#4fd18b;--warn:#ff8a5c;
-  --bois:#5fbf6a;--feu:#e0533d;--terre:#d9a441;--metal:#c9d1dc;--eau:#4a8fe0;
+  --bg:#f6f8f9; --paper:#ffffff; --ink:#18252d; --muted:#5b6b75; --line:#d8e0e5; --soft:#eef3f6;
+  --accent:#1d5b78; --accent-soft:#e2eef4; --neg:#b3261e; --neg-soft:#fbe9e7; --pos:#22704a; --pos-soft:#e5f3eb;
+  --f-display:Georgia,"Times New Roman",serif; --f-body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.5;min-height:100vh}
-body{padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(76px + env(safe-area-inset-bottom)) env(safe-area-inset-left)}
-header{padding:18px 18px 10px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line)}
-header img{width:40px;height:40px;border-radius:10px}
-header h1{font-size:19px;font-weight:700;letter-spacing:.2px}
-header small{display:block;color:var(--mut);font-size:12px;font-weight:400}
-main{max-width:640px;margin:0 auto;padding:16px}
-.view{display:none}.view.on{display:block}
-h2{font-size:22px;margin:6px 0 12px}
-h3{font-size:17px;margin:18px 0 8px;color:var(--amber)}
-p{margin:0 0 10px}
-.mut{color:var(--mut);font-size:14px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
-.btn{display:block;width:100%;border:0;border-radius:12px;padding:15px;font-size:16px;font-weight:700;background:var(--amber);color:#1a1300;cursor:pointer}
-.btn.ghost{background:transparent;color:var(--amber);border:1.5px solid var(--amber)}
-.btn:disabled{opacity:.35}
-.row{display:flex;gap:10px;margin-top:12px}.row .btn{flex:1}
-/* quiz */
-.prog{height:6px;background:var(--panel2);border-radius:3px;overflow:hidden;margin:4px 0 16px}
-.prog i{display:block;height:100%;background:var(--amber);transition:width .25s}
-.opt{display:block;width:100%;text-align:left;background:var(--panel);border:1.5px solid var(--line);color:var(--txt);border-radius:12px;padding:14px;margin-bottom:10px;font-size:15px;cursor:pointer}
-.opt.sel{border-color:var(--amber);background:#2a2614}
-/* result */
-.hero{text-align:center;padding:20px 16px}
-.hero .el{font-size:34px;font-weight:800;margin:4px 0}
-.chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:13px;font-weight:600;background:var(--panel2);margin:2px}
-.bars div{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:14px}
-.bars span{width:52px}
-.bars b{flex:1;height:10px;background:var(--panel2);border-radius:5px;overflow:hidden}
-.bars b i{display:block;height:100%}
-.bars em{font-style:normal;width:18px;text-align:right;color:var(--mut)}
-ul.l{padding-left:20px;margin:0 0 10px}ul.l li{margin:3px 0}
-.lbl{font-weight:700;color:var(--ok)}.lbl.no{color:var(--warn)}
-.note{border-left:3px solid var(--warn);background:#2a1c18;padding:10px 12px;border-radius:0 10px 10px 0;font-size:14px;margin:10px 0}
-/* element list */
-.card{border-left:5px solid var(--c);cursor:pointer}
-.card .t{font-weight:700;font-size:17px}
-details{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:12px}
-details summary{padding:14px 16px;font-weight:700;cursor:pointer;list-style:none}
-details summary::-webkit-details-marker{display:none}
-details summary:after{content:"＋";float:right;color:var(--amber)}
-details[open] summary:after{content:"－"}
-details .in{padding:0 16px 14px}
-/* nav */
-nav{position:fixed;left:0;right:0;bottom:0;background:#0a1120;border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:5}
-nav button{flex:1;background:none;border:0;color:var(--mut);padding:9px 2px 8px;font-size:11px;cursor:pointer}
-nav button b{display:block;font-size:20px;line-height:1.2}
-nav button.on{color:var(--amber)}
-#upd{display:none;position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));background:var(--amber);color:#1a1300;border-radius:12px;padding:12px 14px;z-index:9;font-weight:600;align-items:center;gap:10px}
-#upd button{margin-left:auto;background:#1a1300;color:var(--amber);border:0;border-radius:8px;padding:8px 12px;font-weight:700}
-svg text{font-family:inherit}
-:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#10171c; --paper:#172129; --ink:#e3eaee; --muted:#93a4ae; --line:#2b3a44; --soft:#1d2a33;
+  --accent:#7cbcd9; --accent-soft:#1c3644; --neg:#f2897f; --neg-soft:#3a1f1d; --pos:#7fcf9f; --pos-soft:#1b3427; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10171c; --paper:#172129; --ink:#e3eaee; --muted:#93a4ae; --line:#2b3a44; --soft:#1d2a33;
+  --accent:#7cbcd9; --accent-soft:#1c3644; --neg:#f2897f; --neg-soft:#3a1f1d; --pos:#7fcf9f; --pos-soft:#1b3427; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 16px 56px;display:grid;gap:22px}
+header{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:end;justify-content:space-between}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(1.7rem,4vw,2.3rem);line-height:1.1;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:6px 0 0;max-width:62ch}
+h2{font-family:var(--f-display);font-weight:600;font-size:1.25rem;margin:0}
+.eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;font-weight:700;color:var(--muted)}
+section.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:14px;min-width:0}
+.head{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.toggle{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--soft)}
+.toggle button{border:0;background:transparent;color:var(--muted);font:600 .85rem var(--f-body);padding:7px 14px;border-radius:999px;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--accent);color:var(--paper)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px 16px}
+.fld{display:grid;gap:4px}
+.fld label{font-size:.8rem;color:var(--muted);font-weight:500}
+input[type=number]{width:100%;font:500 .95rem var(--f-body);font-variant-numeric:tabular-nums;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 9px;text-align:right}
+input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.group-t{grid-column:1/-1;margin-top:4px;border-top:1px dashed var(--line);padding-top:10px}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:680px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--paper);z-index:1;white-space:normal;min-width:190px}
+thead th{background:var(--soft);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+thead th:first-child{background:var(--soft)}
+td input{min-width:92px;padding:5px 7px;font-size:.9rem}
+tr.sec td{background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.07em}
+tr.sec td:first-child{background:var(--accent-soft)}
+tr.tot td{font-weight:700;border-top:2px solid var(--ink)}
+tr.calc td{color:var(--muted)}
+tr.key td{font-weight:700}
+td.neg{color:var(--neg);background:var(--neg-soft)}
+td.pos{color:var(--pos)}
+.col0{background:var(--soft)}
+.ctrls{display:flex;flex-wrap:wrap;gap:12px 18px}.dur{display:grid;gap:5px}.toggle{flex-wrap:wrap}
+.verdict{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border-radius:999px;padding:6px 12px;font-weight:600;font-size:.85rem}
+.chip.ok{background:var(--pos-soft);color:var(--pos)} .chip.ko{background:var(--neg-soft);color:var(--neg)}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--paper);font:600 .88rem var(--f-body);border-radius:7px;padding:8px 14px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.note{color:var(--muted);font-size:.85rem;max-width:75ch;margin:0}
+.toast{font-size:.85rem;color:var(--pos);font-weight:600}
+textarea{width:100%;min-height:90px;font:.8rem ui-monospace,monospace;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px}
+.ver{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:.72rem;font-weight:700;letter-spacing:.04em;vertical-align:middle}
+.offline{color:var(--muted);font-size:.78rem;margin-left:6px}
+.maj{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--accent);color:var(--paper);padding:10px 16px;border-radius:999px;font-weight:600;font-size:.88rem;box-shadow:0 4px 16px rgba(0,0,0,.2)}
 </style>
 </head>
 <body>
-<header>
-  <img src="icon-192.png" alt="">
-  <div><h1>Mon élément</h1><small>Médecine chinoise · 5 éléments</small></div>
-</header>
 
-<main>
-  <!-- ACCUEIL -->
-  <section id="v-home" class="view on">
-    <div class="panel">
-      <h2>Quel est votre élément dominant ?</h2>
-      <p>En médecine traditionnelle chinoise, corps et esprit sont animés par une même énergie vitale, le <b>qi</b>, influencée par le yin et le yang et répartie entre cinq éléments : Bois, Feu, Terre, Métal et Eau.</p>
-      <p class="mut">7 questions, une réponse par question : choisissez celle qui vous ressemble le plus.</p>
-      <button class="btn" onclick="startQuiz()">Commencer le test</button>
-      <div id="lastRes"></div>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Outil de gestion · BTS GPME <span class="ver" id="ver">v1.1</span><span class="offline" id="off" hidden>· hors connexion</span></div>
+      <h1>Plan de financement</h1>
+      <p class="sub">Choisissez la durée du plan (2 à 10 ans), puis saisissez les hypothèses : la CAF, les remboursements d'emprunt et la trésorerie se calculent seuls. Les chiffres affichés au départ sont un exemple.</p>
     </div>
-    <div class="note">Ces conseils relèvent du bien-être et ne remplacent pas un avis médical. Une fatigue qui dure mérite toujours une consultation chez votre médecin.</div>
+    <div class="ctrls">
+      <div class="dur">
+        <span class="eyebrow">Durée du plan</span>
+        <div class="toggle" role="group" aria-label="Durée du plan" id="durs"></div>
+      </div>
+      <div class="dur">
+        <span class="eyebrow">Colonne de démarrage</span>
+        <div class="toggle" role="group" aria-label="Année 0">
+          <button id="m5" aria-pressed="true">Sans année 0</button>
+          <button id="m6" aria-pressed="false">Avec année 0</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="card">
+    <div class="head"><h2>Hypothèses de démarrage</h2><span class="eyebrow" id="placeLbl">Placées en année 1</span></div>
+    <div class="grid" id="params"></div>
   </section>
 
-  <!-- QUIZ -->
-  <section id="v-quiz" class="view">
-    <div class="mut" id="qNum"></div>
-    <div class="prog"><i id="qProg"></i></div>
-    <h2 id="qTitle"></h2>
-    <div id="qOpts"></div>
-    <div class="row">
-      <button class="btn ghost" id="qPrev" onclick="prevQ()">Précédent</button>
-      <button class="btn" id="qNext" onclick="nextQ()">Suivant</button>
-    </div>
+  <section class="card">
+    <div class="head"><h2>Prévisions annuelles</h2><span class="eyebrow">Montants en €</span></div>
+    <div class="scroll"><table id="tIn"></table></div>
+    <p class="note">EBE = résultat avant impôt, hors dotations aux amortissements et hors intérêts. Variation du BFR : positive si le BFR augmente, négative s'il diminue.</p>
   </section>
 
-  <!-- RESULTAT -->
-  <section id="v-res" class="view"></section>
-
-  <!-- ELEMENTS -->
-  <section id="v-el" class="view">
-    <h2>Les 5 profils</h2>
-    <p class="mut">Touchez un élément pour voir sa fiche complète.</p>
-    <div id="elList"></div>
+  <section class="card">
+    <div class="head"><h2>Calcul de la CAF prévisionnelle</h2><span class="eyebrow">CAF = résultat net + DAP</span></div>
+    <div class="scroll"><table id="tCaf"></table></div>
   </section>
 
-  <!-- PLANTES -->
-  <section id="v-pl" class="view">
-    <h2>Plantes phares</h2>
-    <p class="mut">Demandez l'avis de votre médecin ou pharmacien avant toute cure, surtout si vous prenez un traitement.</p>
-    <div id="plList"></div>
+  <section class="card">
+    <div class="head"><h2>Plan de financement</h2><div class="verdict" id="verdict"></div></div>
+    <div class="scroll"><table id="tPlan"></table></div>
+    <div class="actions">
+      <button class="btn" id="copy">Copier pour Excel</button>
+      <button class="btn ghost" id="reset">Revenir à l'exemple</button>
+      <button class="btn ghost" id="clear">Tout vider</button>
+      <span class="toast" id="toast" hidden></span>
+    </div>
+    <textarea id="fallback" hidden readonly></textarea>
+    <p class="note" id="note0"></p>
   </section>
-
-  <!-- INFOS -->
-  <section id="v-info" class="view">
-    <h2>Infos</h2>
-    <div class="panel">
-      <h3 style="margin-top:0">Installer l'appli</h3>
-      <p><b>iPhone :</b> ouvrez le lien dans Safari → bouton Partager → « Sur l'écran d'accueil ».</p>
-      <p><b>Android :</b> Chrome → menu ⋮ → « Installer l'application ».</p>
-      <p class="mut">Une fois ouverte une première fois, l'appli fonctionne sans connexion.</p>
-      <button class="btn" onclick="share()">Partager avec un ami</button>
-    </div>
-    <div class="panel">
-      <h3 style="margin-top:0">Fatigue : quand consulter ?</h3>
-      <p>Une fatigue liée au rythme de vie (stress, surmenage, manque de sommeil) se corrige souvent avec une meilleure hygiène de vie. Mais si elle s'accompagne d'une perte ou prise de poids, d'une baisse d'appétit, ou si elle persiste, elle peut signaler une maladie (anémie, thyroïde, diabète, infection…) : consultez.</p>
-    </div>
-    <div class="panel">
-      <h3 style="margin-top:0">Version</h3>
-      <p>Version <b id="ver"></b></p>
-      <ul class="l mut" id="changelog"></ul>
-      <button class="btn ghost" onclick="checkUpdate()">Vérifier les mises à jour</button>
-      <p class="mut" id="updMsg" style="margin-top:8px"></p>
-      <p class="mut" style="margin-top:12px">Contenu résumé d'après un hors-série Santé Magazine consacré à la médecine chinoise (Dr D. Lamboley, Dr T. Cuniot, G. Grandjean, Dr J.-M. Morel).</p>
-    </div>
-  </section>
-</main>
-
-<div id="upd">Nouvelle version disponible<button onclick="applyUpdate()">Mettre à jour</button></div>
-
-<nav>
-  <button class="on" data-v="home" onclick="go('home')"><b>☯</b>Accueil</button>
-  <button data-v="res" onclick="go('res')"><b>◎</b>Mon profil</button>
-  <button data-v="el" onclick="go('el')"><b>⬠</b>Éléments</button>
-  <button data-v="pl" onclick="go('pl')"><b>❦</b>Plantes</button>
-  <button data-v="info" onclick="go('info')"><b>ⓘ</b>Infos</button>
-</nav>
+</div>
 
 <script>
-const APP_VERSION = '1.0.0';
-const CHANGELOG = [
-  '1.0.0 — Première version : test, 5 profils, plantes, mode hors connexion.'
+const num=v=>{const n=parseFloat(v);return isNaN(n)?0:n};
+const NMAX=10,DUREES=[2,3,4,5,6,7,8,10];
+let N=5;
+const PARAMS=[
+  ["g","Investissement initial"],
+  ["inv","Montant de l'investissement (€ HT)",150000],
+  ["duree","Durée d'amortissement (ans)",5],
+  ["bfr","BFR de démarrage (€)",20000],
+  ["g","Financement initial"],
+  ["apport","Apport / augmentation de capital (€)",40000],
+  ["subv","Subvention d'investissement (€)",10000],
+  ["emp","Emprunt (€)",90000],
+  ["taux","Taux de l'emprunt (%)",4],
+  ["nEmp","Durée de l'emprunt (ans)",5],
+  ["g","Autres données"],
+  ["treso","Trésorerie initiale (€)",5000],
+  ["is","Taux d'IS (%)",25],
 ];
-
-const EL = {
-  B:{nom:'Bois', sym:'◆', c:'var(--bois)'},
-  F:{nom:'Feu',  sym:'▲', c:'var(--feu)'},
-  T:{nom:'Terre',sym:'●', c:'var(--terre)'},
-  M:{nom:'Métal',sym:'✚', c:'var(--metal)'},
-  E:{nom:'Eau',  sym:'■', c:'var(--eau)'}
-};
-const ORDER = ['F','T','M','E','B']; // cycle d'engendrement, pour le pentagone
-
-const Q = [
- {t:'Votre personnalité', o:[
-  ['B','Tourné(e) vers les autres, spontané(e), à l\'écoute de mon intuition, émotif(ve)'],
-  ['F','Tourné(e) vers les autres et très actif(ve), sans être émotif(ve)'],
-  ['T','Calme, posé(e), plein(e) de compassion'],
-  ['M','Très sensible, peu bavard(e), nostalgique, plutôt résigné(e)'],
-  ['E','Réservé(e), mais ni passif(ve) ni résigné(e)']]},
- {t:'Ce que vous aimez', o:[
-  ['T','L\'harmonie, un foyer chaleureux, les plaisirs des sens et de la table'],
-  ['B','Le changement, la nouveauté, que ça bouge'],
-  ['F','Plaire, briller, profiter de la vie'],
-  ['E','Trancher, prendre des décisions, défendre de justes causes'],
-  ['M','Une vie bien réglée, sans me faire remarquer']]},
- {t:'Ce que vous n\'aimez pas', o:[
-  ['M','L\'injustice, les décisions précipitées, être attaqué(e) de front'],
-  ['E','Être aidé(e), le mensonge, qu\'on se mêle de mes affaires'],
-  ['T','Les disputes et les grandes assemblées'],
-  ['F','Perdre (même si la déception passe vite)'],
-  ['B','Dépendre des autres ou me fondre dans le groupe']]},
- {t:'Vous avez le sens…', o:[
-  ['E','Du mérite, des traditions, de la hiérarchie'],
-  ['M','De l\'ordre, de la raison, de la justice'],
-  ['B','De l\'intuition et de la créativité'],
-  ['F','Du concret, de l\'esthétique, du relationnel, de l\'humour'],
-  ['T','Du partage, de l\'adaptation, du dialogue et de la logique']]},
- {t:'On vous reproche souvent d\'être…', o:[
-  ['B','Colérique, rigide, un peu trop cash'],
-  ['F','Insouciant(e), casse-cou, manipulateur(trice)'],
-  ['E','Peu romantique, mystérieux(se), distant(e)'],
-  ['T','Têtu(e), stressé(e), anxieux(se)'],
-  ['M','Tourné(e) vers le passé, manquant de volonté']]},
- {t:'Les qualités qu\'on vous reconnaît', o:[
-  ['M','Romantisme, idéalisme, honnêteté'],
-  ['T','Méthode, pédagogie, mesure'],
-  ['E','Organisation, concentration, efficacité'],
-  ['B','Enthousiasme, pas rancunier(ère)'],
-  ['F','Humour, franchise, optimisme']]},
- {t:'Vos petits soucis de santé', o:[
-  ['T','Transit, sommeil, acidité gastrique, prise de poids, coup de barre après les repas'],
-  ['B','Foie ou vésicule, tendinites, contractures, problèmes de peau ou allergies'],
-  ['M','Moral en berne, digestion, peau, angines, tendance à s\'inquiéter pour sa santé'],
-  ['E','Soucis urinaires, mal de dos ou rhumatismes, frilosité, manque d\'énergie'],
-  ['F','Cœur et tension, nervosité, maux de tête, digestion, fièvres, palpitations, acouphènes']]}
+const ROWS=[
+  ["ebe","EBE prévisionnel",[52000,60000,66000,70000,72000,74000,75000,76000,77000,78000]],
+  ["renouv","Investissements de renouvellement",[0,0,15000,0,0,20000,0,0,0,0]],
+  ["dbfr","Variation du BFR",[3000,2000,2000,1000,0,0,0,0,0,0]],
+  ["div","Dividendes versés",[0,5000,8000,10000,10000,12000,12000,12000,15000,15000]],
+  ["cess","Prix de cession d'immobilisations",[0,0,4000,0,0,3000,0,0,0,0]],
 ];
+let ex=()=>({n:5,y0:false,p:Object.fromEntries(PARAMS.filter(r=>r[0]!=="g").map(r=>[r[0],r[2]])),r:Object.fromEntries(ROWS.map(r=>[r[0],[...r[2]]]))});
+let S=ex();
+try{const s=JSON.parse(localStorage.getItem("pf-state"));if(s&&s.p&&s.r)S=s}catch(e){}
+function ajuste(){S.n=Math.min(NMAX,Math.max(1,Math.round(S.n||5)));N=S.n;
+  ROWS.forEach(([k])=>{const a=S.r[k]||[];S.r[k]=[...Array(NMAX)].map((_,i)=>num(a[i]))});}
+const save=()=>{try{localStorage.setItem("pf-state",JSON.stringify(S))}catch(e){}};
+const fmt=v=>Math.round(v).toLocaleString("fr-FR");
+const $=id=>document.getElementById(id);
 
-const P = {
- B:{organe:'Foie et vésicule biliaire', type:'Bois yang : trop d\'énergie dans le foie',
-  portrait:'Hyperactif(ve), entreprenant(e), enthousiaste, décideur(se), parfois colérique. Grand besoin de se dépenser, amateur(trice) de bonne chère.',
-  fatigue:'Réveil difficile compensé par le café et les excitants, puis regain d\'énergie le soir : vous vous couchez tard.',
-  pri:['Saveur acide légère : prune, pomme, cerise, fraise, poire, pêche, tomate crue, épinard, poireau, blé, avoine, pain au levain, lait, poulet jaune','Saveur piquante : ail, oignon, radis rose, gingembre, thym, ciboulette, poivre, piment','Pour le foie : artichaut, céleri, algues rouges, anchois, crevettes, porc'],
-  evi:['Acidité marquée (vinaigre, sauce tomate, rhubarbe, agrumes, kiwi, yaourt) : trop astringente, elle freine votre énergie'],
-  sol:['Sport soutenu : jogging, fitness…','Se coucher plus tôt, avec une heure de détente avant et un dîner léger','Réduire ou arrêter les excitants'],
-  oligo:'Pendant un mois : manganèse-soufre le matin et magnésium-phosphore le soir (une ampoule de chaque).',
-  massage:'Masser longuement et fermement la zone du foie avec 10 gouttes d\'huile essentielle de mélisse dans une cuillère à soupe d\'huile végétale bio (germe de blé ou amande douce).',
-  alim:'Aliments froids et acides : algues, pourpier, tomates en salade. Pissenlit, artichaut et radis noir pour aider l\'organisme à se détoxifier.',
-  recette:{nom:'Salade de crabe (2 pers.)', ing:'80 g de crabe, 2 cœurs d\'artichaut, 50 g de pousses de bambou, 1 tomate, pourpier, vinaigre chinois, huile d\'olive, jus de citron, sel, poivre', etapes:'Émiettez le crabe. Coupez artichauts et pousses de bambou en dés, la tomate en rondelles, ajoutez le pourpier. Arrosez d\'une vinaigrette et posez le crabe dessus.'}},
- F:{organe:'Cœur et intestin grêle', type:'Feu yang : trop d\'énergie dans le cœur',
-  portrait:'Vite enthousiaste, entier(ère) et idéaliste, très sensible au bruit, à l\'agitation et aux personnes « énergivores ».',
-  fatigue:'Journées en montagnes russes : pics d\'excitation et d\'émotivité puis coups de pompe. Tendance au cholestérol, triglycérides ou acide urique élevés.',
-  pri:['Amertume douce : abricot, artichaut, céleri, navet, échalote, lentilles, sarrasin, seigle, riz sauvage, pousse de bambou, mouton','Saveur salée douce : châtaigne, noix, algues, fruits de mer, haricot noir, porc','Pour le cœur : carotte, concombre, coquilles Saint-Jacques, pigeon, lapin'],
-  evi:['Amertume prononcée (café, thé noir, cacao, grillades) : elle assèche et gêne la fonction cœur'],
-  sol:['Sport doux : natation, marche rapide…'],
-  oligo:'Cure de trois mois : manganèse-cobalt le matin, magnésium-phosphore le soir (une ampoule).',
-  massage:'Avec 10 gouttes d\'huile essentielle de lavandin dans une cuillère à soupe d\'huile végétale bio, masser le point Shen Men (« Porte du Cœur ») : sur le pli du poignet côté intérieur, dans le petit creux juste après l\'os saillant, côté petit doigt.',
-  alim:'Huiles végétales crues ; salades de soja, algues, asperges, céleri, laitue, pomme. Évitez fritures, sucreries et charcuterie. Le thé vous fait du bien.',
-  recette:{nom:'Salade d\'azukis (2 pers.)', ing:'60 g d\'azukis, 25 g de germes de soja, 40 g de salicornes, 60 g de céleri branche, 5 cl de tamari, 2 cl d\'huile de tournesol, sel, poivre', etapes:'Faites tremper les azukis une nuit, cuisez-les 25 min, égouttez et laissez refroidir. Faites mariner 20 min le céleri en morceaux avec tamari, huile, sel et poivre, puis ajoutez haricots, salicornes et germes de soja.'}},
- T:{organe:'Estomac et rate', type:'Terre yin : manque d\'énergie dans la rate',
-  portrait:'Élément central. Personne qui dort beaucoup, se démotive vite, rumine ses soucis, avec une tendance au blues ; supporte mal les rythmes imposés.',
-  fatigue:'Sommeil long mais peu réparateur, variations de poids parfois brusques.',
-  pri:['Douceur subtile : sucre roux, maïs, potimarron, melon, bœuf, pois chiche, choux, avoine, blé, riz blanc','Un peu d\'amer et de salé doux, et du piquant pour éviter la lourdeur','Pour la rate : aubergine, thon, canard'],
-  evi:['Sucre raffiné et miel en excès : ils accentuent votre lenteur naturelle','Acidité et amertume prononcées'],
-  sol:['Du repos, de l\'insouciance, de la flânerie et des rires pour calmer le mental','Écouter son corps et retrouver son rythme propre'],
-  oligo:'Cure d\'un mois début d\'automne. Matin : alterner cuivre-zinc (une ampoule de chaque) et magnésium. Soir : alterner argent et cuivre.',
-  massage:'Huile essentielle de citron (10 gouttes par cuillère à soupe d\'huile végétale bio) : grands cercles sur le plexus solaire dans le sens des aiguilles d\'une montre, puis sur le ventre.',
-  alim:'Aliments doux, chauds ou tièdes. Champignons et riz pour l\'énergie ; maïs, avoine, patate douce pour la digestion ; dattes, pêches, abricots pour fortifier ; le mulet côté poisson. Aussi : petit épeautre, tofu, pistache, ananas, papaye, noix de coco, caille, sauce soja, poivre noir, cannelle, fenouil, mouton, agneau.',
-  recette:null},
- M:{organe:'Poumon et gros intestin', type:'Métal yin : manque d\'énergie dans les poumons',
-  portrait:'Plutôt introverti(e) et mesuré(e), couche-tôt et lève-tôt, vie réglée pour ménager ses réserves. Frileux(se), teint pâle, voix faible ; l\'automne rend mélancolique.',
-  fatigue:'Coup de fatigue en fin de journée, au coucher du soleil.',
-  pri:['Piquant léger : pêche, avoine, radis rose…','Acide et amer doux (voir Bois et Feu)','Pour le poumon : arachide, carotte, hareng, caille'],
-  evi:['Piquant prononcé (alcool, ail, piment, poivre, moutarde) : trop dispersant pour vous'],
-  sol:['La marche, surtout dans la nature','Éviter les sports très intenses'],
-  oligo:'Cure d\'un mois : manganèse-cuivre le matin (fatigue chronique, fragilité respiratoire) et zinc-cuivre le soir (fatigue avec petit moral).',
-  massage:'Masser le thorax avec de l\'huile essentielle de myrte (diluée). Se faire masser le haut du dos, au niveau du tiers supérieur des omoplates.',
-  alim:'Aliments piquants chauds ou tièdes, s\'ils sont bien tolérés. Beaucoup d\'aromates : gingembre, fenouil, carvi, aneth. Souvent : mandarine, pamplemousse, citron, poire, canard, menthe.',
-  recette:{nom:'Côtes d\'agneau, petit épeautre et fenouil (2 pers.)', ing:'2 à 4 côtes d\'agneau, 1 c. à s. de sauce soja, 4 c. à s. de crème de soja, 1 c. à s. d\'huile d\'olive, petit épeautre, 1 fenouil', etapes:'Cuisez l\'épeautre. Dorez le fenouil coupé en quatre à l\'huile d\'olive. Saisissez les côtes, ajoutez sauce et crème de soja. Servez viande, fenouil et épeautre nappés de sauce.'}},
- E:{organe:'Rein et vessie', type:'Eau yin : manque d\'énergie dans le rein',
-  portrait:'Réservé(e) et organisé(e), tempérament naturellement « froid ». Souvent une enfance fragile (otites, angines…).',
-  fatigue:'Fatigue permanente, tension basse, défenses immunitaires faibles, parfois vertiges et difficultés de concentration : l\'impression que la batterie lâche.',
-  pri:['Salé doux et amer prononcé, qui « concentrent » et stabilisent','Piquant doux pour faire circuler','Pour le rein : lentilles, sésame, carotte, moules, saumon, mouton'],
-  evi:['Salé prononcé (charcuterie, condiments salés…) : il accentue le côté froid'],
-  sol:['Se ménager malgré la pression extérieure et adapter sa vie à ses capacités'],
-  oligo:'Cuivre-or-argent, une dose par jour (deux si fatigue), un mois, au moins trois fois par an.',
-  massage:'Se faire masser le bas du dos (zone des reins) avec de l\'huile essentielle de romarin à cinéole diluée.',
-  alim:'Graines et noix achetées en coque, miel, jujube, pommes, potiron. Viandes : agneau, porc, lapin, pigeon.',
-  recette:{nom:'Pigeon au gingembre et au miel (2 pers.)', ing:'1 pigeon, 30 g de gingembre frais, 2 oignons, 15 g de champignons noirs chinois (réhydratés), basilic, poivre, poivre de Sichuan, 2 c. à s. d\'huile d\'arachide, 2 c. à s. de miel d\'acacia, sel', etapes:'Au wok, dorez les oignons émincés, puis le gingembre râpé et le pigeon. Assaisonnez, couvrez 40 min en arrosant. 15 min avant la fin, ajoutez basilic, champignons et miel.'}}
+function buildParams(){
+  $("params").innerHTML=PARAMS.map(r=>r[0]==="g"?`<div class="group-t eyebrow">${r[1]}</div>`:
+    `<div class="fld"><label for="p_${r[0]}">${r[1]}</label><input type="number" id="p_${r[0]}" data-p="${r[0]}" value="${S.p[r[0]]??0}" step="any"></div>`).join("");
+}
+function buildIn(){
+  let h=`<thead><tr><th>Élément</th>${[...Array(N)].map((_,i)=>`<th>Année ${i+1}</th>`).join("")}</tr></thead><tbody>`;
+  ROWS.forEach(([k,l])=>{h+=`<tr><td>${l}</td>${S.r[k].slice(0,N).map((v,i)=>`<td><input type="number" id="r_${k}_${i}" data-r="${k}" data-i="${i}" value="${v}" step="any" aria-label="${l} année ${i+1}"></td>`).join("")}</tr>`});
+  $("tIn").innerHTML=h+"</tbody>";
+}
+
+function compute(){
+  const p=S.p,t=num(p.is)/100,tx=num(p.taux)/100,n=Math.max(1,Math.round(num(p.nEmp))),d=Math.max(1,Math.round(num(p.duree)));
+  const caf=[],rows={dap:[],int:[],rai:[],is:[],rn:[],caf:[],remb:[]};
+  let crd=num(p.emp);const amort=num(p.emp)/n;
+  for(let i=0;i<N;i++){
+    const remb=i<n?amort:0,inte=crd*tx;crd-=remb;
+    const dap=(i<d?num(p.inv)/d:0);
+    const rai=num(S.r.ebe[i])-dap-inte, is=Math.max(0,rai)*t, rn=rai-is;
+    rows.dap.push(dap);rows.int.push(inte);rows.rai.push(rai);rows.is.push(is);rows.rn.push(rn);rows.caf.push(rn+dap);rows.remb.push(remb);
+  }
+  // colonnes du plan
+  const cols=S.y0?["Année 0",...[...Array(N)].map((_,i)=>"Année "+(i+1))]:[...Array(N)].map((_,i)=>"Année "+(i+1));
+  const C=cols.length, off=S.y0?1:0, z=()=>Array(C).fill(0);
+  const L={inv:z(),abfr:z(),remb:z(),div:z(),caf:z(),apport:z(),subv:z(),emp:z(),cess:z(),dbfr:z()};
+  L.inv[0]+=num(p.inv);L.abfr[0]+=num(p.bfr);L.apport[0]+=num(p.apport);L.subv[0]+=num(p.subv);L.emp[0]+=num(p.emp);
+  for(let i=0;i<N;i++){const c=i+off,v=num(S.r.dbfr[i]);
+    L.inv[c]+=num(S.r.renouv[i]); if(v>=0)L.abfr[c]+=v; else L.dbfr[c]+=-v;
+    L.remb[c]+=rows.remb[i];L.div[c]+=num(S.r.div[i]);L.caf[c]+=rows.caf[i];L.cess[c]+=num(S.r.cess[i]);}
+  const tE=z().map((_,c)=>L.inv[c]+L.abfr[c]+L.remb[c]+L.div[c]);
+  const tR=z().map((_,c)=>L.caf[c]+L.apport[c]+L.subv[c]+L.emp[c]+L.cess[c]+L.dbfr[c]);
+  const ec=tR.map((r,c)=>r-tE[c]);const deb=[],fin=[];let tr=num(p.treso);
+  ec.forEach(e=>{deb.push(tr);tr+=e;fin.push(tr)});
+  return {rows,cols,L,tE,tR,ec,deb,fin};
+}
+
+function render(){
+  const R=compute();
+  // CAF
+  const cr=[["EBE prévisionnel",S.r.ebe.slice(0,N).map(num),""],["− Dotations aux amortissements",R.rows.dap,"calc"],["− Intérêts de l'emprunt",R.rows.int,"calc"],["= Résultat avant IS",R.rows.rai,""],["− IS",R.rows.is,"calc"],["= Résultat net",R.rows.rn,""],["+ Dotations aux amortissements",R.rows.dap,"calc"],["= CAF",R.rows.caf,"tot"]];
+  $("tCaf").innerHTML=`<thead><tr><th>Élément</th>${[...Array(N)].map((_,i)=>`<th>Année ${i+1}</th>`).join("")}</tr></thead><tbody>`+
+    cr.map(([l,v,c])=>`<tr class="${c}"><td>${l}</td>${v.map(x=>`<td class="${x<0?'neg':''}">${fmt(x)}</td>`).join("")}</tr>`).join("")+"</tbody>";
+  // plan
+  const L=R.L,c0=S.y0;
+  const line=(l,v,cls="")=>`<tr class="${cls}"><td>${l}</td>${v.map((x,i)=>`<td class="${c0&&i===0?'col0 ':''}${cls.includes('key')&&x<0?'neg':cls.includes('key')&&x>0?'pos':''}">${x===0&&!cls?'–':fmt(x)}</td>`).join("")}</tr>`;
+  const sec=l=>`<tr class="sec"><td colspan="${R.cols.length+1}">${l}</td></tr>`;
+  let h=`<thead><tr><th>Plan de financement</th>${R.cols.map((c,i)=>`<th class="${c0&&i===0?'col0':''}">${c}</th>`).join("")}</tr></thead><tbody>`;
+  h+=sec("Emplois (besoins durables)")+line("Investissements",L.inv)+line("Augmentation du BFR",L.abfr)+line("Remboursement d'emprunt",L.remb)+line("Dividendes",L.div)+line("Total des emplois",R.tE,"tot");
+  h+=sec("Ressources (stables)")+line("Capacité d'autofinancement",L.caf)+line("Apport / augmentation de capital",L.apport)+line("Subvention d'investissement",L.subv)+line("Emprunt",L.emp)+line("Cessions d'immobilisations",L.cess)+line("Diminution du BFR",L.dbfr)+line("Total des ressources",R.tR,"tot");
+  h+=sec("Équilibre")+line("Écart (ressources − emplois)",R.ec,"key")+line("Trésorerie de début",R.deb,"calc")+line("Trésorerie de fin",R.fin,"key tot");
+  $("tPlan").innerHTML=h+"</tbody>";
+  const negE=R.ec.map((e,i)=>e<0?R.cols[i]:null).filter(Boolean),negT=R.fin.map((e,i)=>e<0?R.cols[i]:null).filter(Boolean);
+  $("verdict").innerHTML=(negT.length?`<span class="chip ko">Trésorerie négative : ${negT.join(", ")}</span>`:`<span class="chip ok">Trésorerie positive sur toute la période</span>`)+
+    (negE.length?`<span class="chip ko">Écart négatif : ${negE.join(", ")}</span>`:"");
+  $("note0").textContent=c0?"Année 0 : investissement initial et financements disponibles dès le départ, sans CAF. L'année 0 doit s'équilibrer seule ; la CAF commence en année 1, comme dans le calcul de rentabilité.":"Format classique : l'investissement initial et son financement figurent en année 1, avec la CAF de l'année. La CAF n'étant encaissée qu'au fil de l'exercice, choisissez « Avec année 0 » pour séparer le démarrage.";
+  $("placeLbl").textContent=c0?"Placées en année 0":"Placées en année 1";
+  $("durs").innerHTML=DUREES.map(d=>`<button data-n="${d}" aria-pressed="${d===N}">${d} ans</button>`).join("");
+  $("m5").setAttribute("aria-pressed",!c0);$("m6").setAttribute("aria-pressed",c0);
+  window._R=R;save();
+}
+
+document.addEventListener("input",e=>{const el=e.target;
+  if(el.dataset.p){S.p[el.dataset.p]=el.value===""?0:num(el.value);render()}
+  if(el.dataset.r){S.r[el.dataset.r][+el.dataset.i]=el.value===""?0:num(el.value);render()}});
+$("durs").onclick=e=>{const b=e.target.closest("button");if(!b)return;S.n=+b.dataset.n;ajuste();buildIn();render()};
+$("m5").onclick=()=>{S.y0=false;render()};$("m6").onclick=()=>{S.y0=true;render()};
+$("reset").onclick=()=>{const n=S.n,y=S.y0;S=ex();S.n=n;S.y0=y;ajuste();buildParams();buildIn();render();toast("Exemple rechargé")};
+$("clear").onclick=()=>{Object.keys(S.p).forEach(k=>S.p[k]=0);S.p.duree=5;S.p.nEmp=5;S.p.is=25;Object.keys(S.r).forEach(k=>S.r[k]=S.r[k].map(()=>0));ajuste();buildParams();buildIn();render();toast("Tableau vidé")};
+function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(()=>t.hidden=true,2200)}
+$("copy").onclick=()=>{
+  const tsv=[...$("tPlan").querySelectorAll("tr")].map(tr=>[...tr.children].map(c=>c.textContent.replace(/ | /g,"").replace("–","0")).join("\t")).join("\n");
+  const fb=()=>{const f=$("fallback");f.value=tsv;f.hidden=false;f.select();toast("Sélectionné : faites Copier")};
+  try{navigator.clipboard.writeText(tsv).then(()=>toast("Copié : collez dans Excel"),fb)}catch(e){fb()}
 };
+ajuste();buildParams();buildIn();render();
 
-const PL = [
- {nom:'Ganoderma (reishi)', role:'Pour renforcer', txt:'Champignon riche en polysaccharides qui soutiennent l\'immunité intestinale et en triterpènes aux effets proches des plantes adaptogènes (résistance au stress). Utilisé en prévention ou quand l\'immunité est affaiblie.', dose:'Cures d\'un mois sur deux : 600 mg d\'extrait sec par jour, en deux prises (matin et soir).', pre:'À éviter pendant la grossesse et en cas de traitement immunosuppresseur.'},
- {nom:'Ginkgo biloba', role:'Pour le cerveau', txt:'Antioxydant, il protège les cellules du cerveau et améliore la circulation sanguine : mémoire et concentration (étudiants en période d\'examens), et prévention du déclin cérébral chez les personnes âgées à risque vasculaire.', dose:'Extraits standardisés 40 mg, 3 fois par jour, en cure de 2 à 3 mois, idéalement avec du thé vert.', pre:'À éviter avec anticoagulants ou antiplaquettaires. Prudence avec les traitements contre l\'hypertension, l\'épilepsie ou l\'hypothyroïdie.'},
- {nom:'Ginseng', role:'Pour résister au stress', txt:'Stimule l\'immunité et le fonctionnement des glandes surrénales : un vrai coup de fouet face au stress, y compris infectieux.', dose:'Cures d\'un mois suivies d\'un mois de pause : 2 g de poudre de racine (1 c. à café rase) ou 1 gélule de 400 mg d\'extrait sec, toujours le matin.', pre:'Déconseillé aux enfants, femmes enceintes ou allaitantes. Prudence en cas de mastose, d\'antécédents familiaux de cancer hormonodépendant (sein, prostate), de diabète (effet hypoglycémiant), d\'hypertension non contrôlée, et avec antihypertenseurs, anticoagulants ou IMAO.'}
-];
-
-/* ---------- stockage ---------- */
-const store = {
-  get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},
-  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-};
-
-/* ---------- navigation ---------- */
-function go(v){
-  document.querySelectorAll('.view').forEach(s=>s.classList.remove('on'));
-  document.getElementById('v-'+v).classList.add('on');
-  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  if(v==='res') renderRes();
-  if(v==='home') renderHome();
-  window.scrollTo(0,0);
-}
-
-/* ---------- quiz ---------- */
-let qi=0, ans=[];
-function startQuiz(){qi=0;ans=new Array(Q.length).fill(null);go('quiz');document.querySelector('nav button.on')?.classList.remove('on');renderQ();}
-function renderQ(){
-  const q=Q[qi];
-  document.getElementById('qNum').textContent=`Question ${qi+1} sur ${Q.length}`;
-  document.getElementById('qProg').style.width=((qi)/Q.length*100)+'%';
-  document.getElementById('qTitle').textContent=q.t;
-  document.getElementById('qOpts').innerHTML=q.o.map((o,i)=>
-    `<button class="opt ${ans[qi]===i?'sel':''}" onclick="pick(${i})">${o[1]}</button>`).join('');
-  document.getElementById('qPrev').style.visibility=qi?'visible':'hidden';
-  const n=document.getElementById('qNext');
-  n.disabled=ans[qi]===null;
-  n.textContent=qi===Q.length-1?'Voir mon résultat':'Suivant';
-}
-function pick(i){ans[qi]=i;renderQ();setTimeout(()=>{if(qi<Q.length-1){qi++;renderQ();}},180);}
-function prevQ(){if(qi>0){qi--;renderQ();}}
-function nextQ(){
-  if(ans[qi]===null)return;
-  if(qi<Q.length-1){qi++;renderQ();return;}
-  const sc={B:0,F:0,T:0,M:0,E:0};
-  ans.forEach((a,i)=>sc[Q[i].o[a][0]]++);
-  store.set('mtc_result',{scores:sc,date:new Date().toISOString()});
-  go('res');
-}
-
-/* ---------- résultat ---------- */
-function dominants(sc){const m=Math.max(...Object.values(sc));return Object.keys(sc).filter(k=>sc[k]===m);}
-
-function pentagon(sc){
-  const S=260,c=S/2,R=86,max=Math.max(4,...Object.values(sc));
-  const pt=(i,r)=>{const a=(-90+72*i)*Math.PI/180;return [c+r*Math.cos(a),c+r*Math.sin(a)];};
-  let g='';
-  [1,.66,.33].forEach(f=>{g+=`<polygon points="${ORDER.map((k,i)=>pt(i,R*f).join(',')).join(' ')}" fill="none" stroke="#2a3a60"/>`;});
-  g+=`<polygon points="${ORDER.map((k,i)=>pt(i,Math.max(6,R*sc[k]/max)).join(',')).join(' ')}" fill="rgba(242,179,61,.22)" stroke="#f2b33d" stroke-width="2"/>`;
-  ORDER.forEach((k,i)=>{const [x,y]=pt(i,R+22);g+=`<circle cx="${x}" cy="${y}" r="15" fill="${getComputedStyle(document.documentElement).getPropertyValue('--'+{B:'bois',F:'feu',T:'terre',M:'metal',E:'eau'}[k])}"/><text x="${x}" y="${y+4}" text-anchor="middle" font-size="12" font-weight="700" fill="#0d1526">${sc[k]}</text>`;
-    const [lx,ly]=pt(i,R+54);g+=`<text x="${lx}" y="${ly+4}" text-anchor="middle" font-size="12" fill="#8a97b3">${EL[k].nom}</text>`;});
-  return `<svg viewBox="-34 -26 328 312" width="100%" style="max-width:320px" role="img" aria-label="Répartition de vos réponses">${g}</svg>`;
-}
-
-function renderRes(){
-  const r=store.get('mtc_result'), box=document.getElementById('v-res');
-  if(!r){box.innerHTML=`<div class="panel"><h2>Pas encore de profil</h2><p>Faites le test pour découvrir votre élément dominant et les conseils qui vous correspondent.</p><button class="btn" onclick="startQuiz()">Faire le test</button></div>`;return;}
-  const d=dominants(r.scores), mixte=d.length>1;
-  let h=`<div class="panel hero">
-    <div class="mut">${mixte?'Profil mixte':'Votre élément dominant'}</div>
-    <div class="el">${d.map(k=>`<span style="color:${EL[k].c}">${EL[k].nom}</span>`).join(' / ')}</div>
-    ${pentagon(r.scores)}
-    <div class="mut">Test du ${new Date(r.date).toLocaleDateString('fr-FR')}</div>
-  </div>`;
-  if(mixte) h+=`<p class="mut">Plusieurs éléments sont à égalité : lisez chaque fiche et retenez ce qui vous parle le plus.</p>`;
-  d.forEach(k=>h+=fiche(k,true));
-  h+=`<button class="btn ghost" onclick="startQuiz()">Refaire le test</button>`;
-  box.innerHTML=h;
-}
-
-function fiche(k,open){
-  const p=P[k],e=EL[k];
-  const li=a=>`<ul class="l">${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
-  return `<details ${open?'open':''} style="border-left:5px solid ${e.c}">
-   <summary><span style="color:${e.c}">${e.sym}</span> ${e.nom} <span class="mut" style="font-weight:400">· ${p.organe}</span></summary>
-   <div class="in">
-    <p>${p.portrait}</p>
-    <h3>Alimentation de l'élément</h3>
-    <p class="lbl">À privilégier</p>${li(p.pri)}
-    <p class="lbl no">À limiter</p>${li(p.evi)}
-    <h3>Profil fatigue : ${p.type}</h3>
-    <p>${p.fatigue}</p>
-    <p class="lbl">Hygiène de vie</p>${li(p.sol)}
-    <p class="lbl">Oligoéléments</p><p>${p.oligo}</p>
-    <p class="lbl">Massage</p><p>${p.massage}</p>
-    <p class="lbl">Alimentation énergie</p><p>${p.alim}</p>
-    ${p.recette?`<h3>Recette : ${p.recette.nom}</h3><p class="mut">${p.recette.ing}</p><p>${p.recette.etapes}</p>`:''}
-    <div class="note">Huiles essentielles : toujours diluées, jamais chez la femme enceinte ou le jeune enfant sans avis. Oligoéléments : demandez conseil à votre pharmacien.</div>
-   </div></details>`;
-}
-
-function renderHome(){
-  const r=store.get('mtc_result'),el=document.getElementById('lastRes');
-  if(!r){el.innerHTML='';return;}
-  const d=dominants(r.scores);
-  el.innerHTML=`<button class="btn ghost" style="margin-top:10px" onclick="go('res')">Voir mon profil : ${d.map(k=>EL[k].nom).join(' / ')}</button>`;
-}
-
-/* ---------- listes ---------- */
-document.getElementById('elList').innerHTML=['B','F','T','M','E'].map(k=>fiche(k,false)).join('');
-document.getElementById('plList').innerHTML=PL.map(p=>`<details><summary>${p.nom} <span class="mut" style="font-weight:400">· ${p.role}</span></summary><div class="in"><p>${p.txt}</p><p class="lbl">Utilisation</p><p>${p.dose}</p><div class="note"><b>Précautions :</b> ${p.pre}</div></div></details>`).join('');
-document.getElementById('ver').textContent=APP_VERSION;
-document.getElementById('changelog').innerHTML=CHANGELOG.map(c=>`<li>${c}</li>`).join('');
-renderHome();
-
-/* ---------- partage ---------- */
-function share(){
-  const url=location.origin+location.pathname;
-  if(navigator.share) navigator.share({title:'Mon élément',text:'Découvre ton élément en médecine chinoise :',url}).catch(()=>{});
-  else {navigator.clipboard?.writeText(url);alert('Lien copié : '+url);}
-}
-
-/* ---------- PWA & mises à jour ---------- */
-let reg;
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('service-worker.js').then(r=>{
-    reg=r;
-    if(r.waiting && navigator.serviceWorker.controller) showUpd();
-    r.addEventListener('updatefound',()=>{
-      const nw=r.installing;
-      nw.addEventListener('statechange',()=>{
-        if(nw.state==='installed' && navigator.serviceWorker.controller) showUpd();
-      });
-    });
-    r.update();
+// ── Version, hors connexion, mises à jour automatiques ──
+const APP_VERSION="1.1";
+const upd=()=>{$("off").hidden=navigator.onLine};
+addEventListener("online",upd);addEventListener("offline",upd);upd();
+if("serviceWorker" in navigator){
+  let rechargee=false;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{
+    if(rechargee)return;rechargee=true;
+    const b=document.createElement("div");b.className="maj";b.textContent="Mise à jour installée…";document.body.appendChild(b);
+    setTimeout(()=>location.reload(),600);
   });
-  let reloading=false;
-  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!reloading){reloading=true;location.reload();}});
-}
-function showUpd(){document.getElementById('upd').style.display='flex';}
-function applyUpdate(){if(reg&&reg.waiting)reg.waiting.postMessage('skipWaiting');else location.reload();}
-function checkUpdate(){
-  const m=document.getElementById('updMsg');
-  if(!reg){m.textContent='Mises à jour indisponibles ici.';return;}
-  if(!navigator.onLine){m.textContent='Hors connexion : réessayez une fois connecté.';return;}
-  m.textContent='Vérification…';
-  reg.update().then(()=>setTimeout(()=>{m.textContent=reg.waiting?'Une nouvelle version est prête.':'Vous avez la dernière version.';if(reg.waiting)showUpd();},1500));
+  navigator.serviceWorker.register("/sw.js",{updateViaCache:"none"}).then(reg=>{
+    const verifier=()=>{if(navigator.onLine)reg.update().catch(()=>{})};
+    document.addEventListener("visibilitychange",()=>{if(!document.hidden)verifier()});
+    addEventListener("online",verifier);
+    setInterval(verifier,30*60*1000);
+  }).catch(()=>{});
 }
 </script>
 </body>

@@ -1,16 +1,16 @@
 {
-  "name": "Mon élément – Médecine chinoise",
-  "short_name": "Mon élément",
-  "description": "Test des 5 éléments et conseils anti-fatigue selon votre profil",
-  "start_url": "./index.html",
-  "scope": "./",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#0d1526",
-  "theme_color": "#0d1526",
+  "name": "Plan de financement",
+  "short_name": "Plan financement",
+  "description": "Plan de financement de 2 à 10 ans avec option année 0, CAF et emprunt calculés automatiquement",
   "lang": "fr",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f6f8f9",
+  "theme_color": "#1d5b78",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
